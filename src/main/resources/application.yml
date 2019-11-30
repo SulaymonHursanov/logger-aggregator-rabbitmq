@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+javamelody:
+  enabled: true
+  spring-monitoring-enabled: true
+  init-parameters:
+    log: true
+    authorized-users: admin:core
