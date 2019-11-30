@@ -7,3 +7,10 @@ javamelody:
   init-parameters:
     log: true
     authorized-users: admin:core
+
+spring:
+  rabbitmq:
+    host: 54.80.6.32
+    password: password
+    username: admin
+    port: 5672

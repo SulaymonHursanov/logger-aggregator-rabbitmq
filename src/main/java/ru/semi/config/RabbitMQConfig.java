@@ -1,65 +1,61 @@
 package ru.semi.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static ru.semi.config.RabbitMQ.*;
+
 @Configuration
 public class RabbitMQConfig {
 
-    private final String topicExchangeName = "logger-exchange";
-    private final String logQueueName = "log-queue";
-    private final String errorLogQueueName = "error-log-queue";
-    private final String businessLogicLogQueueName = "business-logic-log-queue";
-    private final String logQueueBinding = "log-binding";
-    private final String errorLogQueueBinding = "error-log-binding";
-    private final String businessLogicLogBinding = "business-logic-log-binding";
-
     @Bean
     public Queue logQueue() {
-        return new Queue(logQueueName, true, false, false);
+        return new Queue(LOG_QUEUE, true, false, false);
     }
 
     @Bean
     public Queue errorLogQueue(){
-        return new Queue(errorLogQueueName, true, false, false);
+        return new Queue(ERROR_LOG_QUEUE, true, false, false);
     }
 
     @Bean
     public Queue businessLogicLogQueue(){
-        return new Queue(businessLogicLogQueueName, true, false, false);
+        return new Queue(BUSINESS_LOGIC_LOG_QUEUE, true, false, false);
     }
 
     @Bean
-    public TopicExchange exchange() {
-        return new TopicExchange(topicExchangeName);
+    public TopicExchange topicExchange() {
+        return new TopicExchange(TOPIC_EXCHANGE_NAME);
+    }
+
+    @Bean
+    public DirectExchange directExchange(){
+        return new DirectExchange(DIRECT_EXCHANGE_NAME);
     }
 
     @Bean
     public Binding logBinding(){
-        return BindingBuilder.bind(logQueue()).to(exchange()).with(logQueueBinding);
+        return BindingBuilder.bind(logQueue()).to(topicExchange()).with(LOG_QUEUE_BINDING);
     }
 
     @Bean
     public Binding errorLogBinding(){
-        return BindingBuilder.bind(errorLogQueue()).to(exchange()).with(errorLogQueueBinding);
+        return BindingBuilder.bind(errorLogQueue()).to(topicExchange()).with(ERROR_LOG_BINDING);
     }
 
     @Bean
     public Binding businessLogicLogBinding(){
-        return BindingBuilder.bind(businessLogicLogQueue()).to(exchange()).with(businessLogicLogBinding);
+        return BindingBuilder.bind(businessLogicLogQueue()).to(directExchange()).with(BUSINESS_LOGIC_LOG_BINDING);
     }
 
     @Bean
     public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory){
         SimpleMessageListenerContainer messageListenerContainer = new SimpleMessageListenerContainer();
         messageListenerContainer.setConnectionFactory(connectionFactory);
-        messageListenerContainer.addQueueNames(logQueueName, errorLogQueueName, businessLogicLogQueueName);
+        messageListenerContainer.addQueueNames(LOG_QUEUE, ERROR_LOG_QUEUE, BUSINESS_LOGIC_LOG_QUEUE);
         return messageListenerContainer;
     }
 }
