@@ -4,11 +4,12 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.semi.dto.LogInfo;
+import ru.semi.services.interfaces.LoggerServiceProducer;
 
 import static ru.semi.config.RabbitMQ.*;
 
 @Service
-public class LoggerServiceImpl extends AbstractService implements LoggerService {
+public class LoggerServiceProducerImpl extends AbstractService implements LoggerServiceProducer {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;

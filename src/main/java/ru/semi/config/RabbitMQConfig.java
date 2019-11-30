@@ -27,6 +27,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue metricQueue(){
+        return new Queue(METRIC_QUEUE, true, false, false);
+    }
+
+    @Bean
     public TopicExchange topicExchange() {
         return new TopicExchange(TOPIC_EXCHANGE_NAME);
     }
@@ -34,6 +39,11 @@ public class RabbitMQConfig {
     @Bean
     public DirectExchange directExchange(){
         return new DirectExchange(DIRECT_EXCHANGE_NAME);
+    }
+
+    @Bean
+    public DirectExchange metricDirectExchange(){
+        return new DirectExchange(METRIC_DIRECT_EXCHANGE_NAME);
     }
 
     @Bean
@@ -52,10 +62,15 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Binding metricBinding(){
+        return BindingBuilder.bind(metricQueue()).to(metricDirectExchange()).with(METRIC_BINDING);
+    }
+
+    @Bean
     public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory){
         SimpleMessageListenerContainer messageListenerContainer = new SimpleMessageListenerContainer();
         messageListenerContainer.setConnectionFactory(connectionFactory);
-        messageListenerContainer.addQueueNames(LOG_QUEUE, ERROR_LOG_QUEUE, BUSINESS_LOGIC_LOG_QUEUE);
+        messageListenerContainer.addQueueNames(LOG_QUEUE, ERROR_LOG_QUEUE, BUSINESS_LOGIC_LOG_QUEUE, METRIC_QUEUE);
         return messageListenerContainer;
     }
 }
