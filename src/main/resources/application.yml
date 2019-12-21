@@ -10,7 +10,8 @@ javamelody:
 
 spring:
   rabbitmq:
-    host: 54.80.6.32
+    host: 52.3.74.224
     password: password
     username: admin
     port: 5672
+    virtual-host: /
