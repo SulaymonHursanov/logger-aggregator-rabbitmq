@@ -12,17 +12,17 @@ public class LoggerServiceConsumerImpl implements LoggerServiceConsumer {
 
     @RabbitListener(queues = LOG_QUEUE)
     public void receiveLogData(String message) {
-        // TODO: 30.11.2019 save into cassandra
+        System.out.println(message);
     }
 
     @RabbitListener(queues = ERROR_LOG_QUEUE)
     public void receiveErrorLogData(String message) {
-        // TODO: 30.11.2019 save into elastic by index log-error
+        System.out.println(message);
     }
 
     @RabbitListener(queues = BUSINESS_LOGIC_LOG_QUEUE)
     public void receiveBusinessLogData(String message) {
-        // TODO: 30.11.2019 save into elastic by index business-logic
+        System.out.println(message);
     }
 
 
